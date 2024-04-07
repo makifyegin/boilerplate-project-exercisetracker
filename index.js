@@ -1,59 +1,51 @@
-const express = require('express')
-const app = express()
-const cors = require('cors')
-require('dotenv').config()
-const bodyParser = require('body-parser');
+const express = require("express");
+const app = express();
+const cors = require("cors");
+require("dotenv").config();
+const bodyParser = require("body-parser");
 
-
-app.use(cors())
-app.use(express.static('public'))
+app.use(cors());
+app.use(express.static("public"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require("uuid");
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/views/index.html')
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/views/index.html");
 });
-  var users = [];
-app.post('/api/users', (req, res) => {
-  const username1 = req.body.username
-const id = uuidv4(); 
- const newUser = {username: username1, _id: id}
- users.push(newUser);
+var users = [];
+app.post("/api/users", (req, res) => {
+  const username1 = req.body.username;
+  const id = uuidv4();
+  const newUser = { username: username1, _id: id };
+  users.push(newUser);
 
-  res.json({username: username1, _id: id})
-  
-})
+  res.json({ username: username1, _id: id });
+});
 
-app.get('/api/users', (req, res) => {
-  res.json(users)
-}
-)
+app.get("/api/users", (req, res) => {
+  res.json(users);
+});
 
-app.post('/api/users/:_id/exercises', (req, res) => {
+app.post("/api/users/:_id/exercises", (req, res) => {
 
-})
-
-app.get('/api/users/:_id/logs', (req, res) => {
-  const id = req.params._id;
-  const user = users.find(user => user._id === id);
-  const username = user.username;
-  const from = req.query.from;
-  const to = req.query.to;
-  const limit = req.query.limit;
-  const response = {
-    _id: id,
-    username: username,
-    from: from,
-    to: to,
-    limit: limit
+  const { description, duration, date } = req.body;
+  const userId = req.params._id;
+  const user = users.find((user) => user._id === userId);
+  if (!user) {
+    return res.json({ error: "user not found" });
   }
-  res.json(response)
-}
-) 
+  const newExercise = {
+    description: description,
+    duration: parseInt(duration),
+    date: date ? new Date(date).toDateString() : new Date().toDateString(),
+    _id: userId,
+    username: user.username,
+  };
+  res.json(newExercise);
 
-
+});
 
 const listener = app.listen(process.env.PORT || 3000, () => {
-  console.log('Your app is listening on port ' + listener.address().port)
-})
+  console.log("Your app is listening on port " + listener.address().port);
+});
