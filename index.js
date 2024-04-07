@@ -31,23 +31,7 @@ app.get('/api/users', (req, res) => {
 )
 
 app.post('/api/users/:_id/exercises', (req, res) => {
-  const id = req.params._id;
-  const date = req.body.date;
-  const duration = req.body.duration;
-  const description = req.body.description;
-  const count = users.length;
-  const user = users.find(user => user._id === id);
-  const username = user.username;
-  const response = {
-    _id: id,
-    username: username,
-    date: new Date(date).toDateString(),
-    duration: parseInt(duration),
-    description: description,
-    count : count
 
-  }
-  res.json(response)
 })
 
 app.get('/api/users/:_id/logs', (req, res) => {
