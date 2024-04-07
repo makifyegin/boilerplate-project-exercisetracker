@@ -35,6 +35,7 @@ app.post('/api/users/:_id/exercises', (req, res) => {
   const date = req.body.date;
   const duration = req.body.duration;
   const description = req.body.description;
+  const count = users.length;
   const user = users.find(user => user._id === id);
   const username = user.username;
   const response = {
@@ -42,7 +43,9 @@ app.post('/api/users/:_id/exercises', (req, res) => {
     username: username,
     date: new Date(date).toDateString(),
     duration: parseInt(duration),
-    description: description
+    description: description,
+    count : count
+
   }
   res.json(response)
 })
